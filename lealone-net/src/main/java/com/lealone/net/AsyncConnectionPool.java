@@ -88,9 +88,11 @@ public class AsyncConnectionPool {
     }
 
     public void removeConnection(AsyncConnection conn) {
-        if (!conn.isShared())
-            decrementExclusiveSize();
-        list.remove(conn);
+        // 删除已经存在的连接才递减计数器
+        if (list.remove(conn)) {
+            if (!conn.isShared())
+                decrementExclusiveSize();
+        }
     }
 
     public boolean isEmpty() {
